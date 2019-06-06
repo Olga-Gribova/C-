@@ -4,16 +4,17 @@
 #include<string>
 #include<vector>
 #include<set>
+#include<conio.h>
 
 using namespace std;
 
 int IN = 1;
 int OUT = 0;
 
-vector<string> words_searching(string & file_name) {
+void words_searching(string & file_name, map<string, int> & words, int & max) {
+	max = 1;
 	ifstream input;
 	input.open(file_name);
-	vector<string> words;
 	char buffer[256];
 	char c;
 	int i;
@@ -31,7 +32,10 @@ vector<string> words_searching(string & file_name) {
 				//value = atof(buffer);
 				if (isupper(buffer[0]))
 					buffer[0] = tolower(buffer[0]);
-				words.push_back(buffer);
+				//words.push_back(buffer);
+				words[buffer]++;
+				if (words[buffer] > max)
+					max = words[buffer];
 				i = 0;
 			}
 		}
@@ -44,32 +48,37 @@ vector<string> words_searching(string & file_name) {
 			buffer[i++] = c;
 		}
 	}
-	return words;
 }
 
 int main() {
 
-	map<string, int> bufwords;
+	map<string, int> words, stop_words;
 	int max = 1;
-	string file_name = "in.txt";
-	vector<string> words = words_searching(file_name);
+	string file_name = "in.txt", stop = "stop.txt";
+	//vector<string> words, stop_words;
+	words_searching(stop, stop_words, max);
+	words_searching(file_name, words, max);
 	
-	for (auto & item : words) {
-		bufwords[item]++;
-		if (bufwords[item] > max)
-			max = bufwords[item];
-	}
-
+	//for (auto & item : words) {
+	//	bufwords[item]++;
+	//	if (bufwords[item] > max)
+	//		max = bufwords[item];
+	//}
 	ofstream output;
 	output.open("out.txt");
-
+	for (auto item : stop_words) {
+		cout << item.first << " ";
+	}
 	for (int i = max; i > 0; i--) {
-		for (auto & item : bufwords) {
-			if (item.second == i) {
+		for (auto & item : words) {
+			//int counter = count(stop_words.rbegin(), stop_words.rend(), item.first);
+			int counter = stop_words[item.first];
+			if (item.second == i && counter < 1) {
+			//if (item.second == i) {
 				output << item.second << ": " << item.first << endl;
 			}
 		}
 	}
-
+	_getch();
 	return 0;
 }
