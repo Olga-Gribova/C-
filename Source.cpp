@@ -5,13 +5,15 @@
 #include<vector>
 #include<set>
 
+using namespace std;
+
 int IN = 1;
 int OUT = 0;
 
-std::vector<std::string> words_searching(std::string & file_name) {
-	std::ifstream input;
+vector<string> words_searching(string & file_name) {
+	ifstream input;
 	input.open(file_name);
-	std::vector<std::string> words;
+	vector<string> words;
 	char buffer[256];
 	char c;
 	int i;
@@ -47,10 +49,10 @@ std::vector<std::string> words_searching(std::string & file_name) {
 
 int main() {
 
-	std::map<std::string, int> bufwords;
+	map<string, int> bufwords;
 	int max = 1;
-	std::string file_name = "in.txt";
-	std::vector<std::string> words = words_searching(file_name);
+	string file_name = "in.txt";
+	vector<string> words = words_searching(file_name);
 	
 	for (auto & item : words) {
 		bufwords[item]++;
@@ -58,13 +60,13 @@ int main() {
 			max = bufwords[item];
 	}
 
-	std::ofstream output;
+	ofstream output;
 	output.open("out.txt");
 
 	for (int i = max; i > 0; i--) {
 		for (auto & item : bufwords) {
 			if (item.second == i) {
-				output << item.second << ": " << item.first << std::endl;
+				output << item.second << ": " << item.first << endl;
 			}
 		}
 	}
